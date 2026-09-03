@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopPing</title>
+<meta name="description" content="ShopPing — a shopping-list app that alerts you when you're near a store with items still on the list. Free for 14 days, then $2.99 once, forever.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  :root {
+    --paper: #fcf9f6;
+    --paper-tint: #f7f0e9;
+    --ink: #271a13;
+    --ink-soft: #6b584c;
+    --coral: #ea580c;
+    --coral-strong: #c2410c;
+    --coral-tint: #fdba74;
+    --coral-wash: #fff1e4;
+    --blue: #2563eb;
+    --blue-tint: #dbeafe;
+    --sand: #e7dacd;
+    --sand-strong: #d8c6b3;
+    --green: #16a34a;
+    --shadow: rgba(39, 26, 19, 0.10);
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1c130e;
+      --paper-tint: #241a13;
+      --ink: #f4ece3;
+      --ink-soft: #c3ab98;
+      --coral: #fb923c;
+      --coral-strong: #fdba74;
+      --coral-tint: #c2410c;
+      --coral-wash: #2e1c10;
+      --blue: #7fa8ff;
+      --blue-tint: #16233d;
+      --sand: #3a2c21;
+      --sand-strong: #4a392c;
+      --green: #4ade80;
+      --shadow: rgba(0, 0, 0, 0.35);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #1c130e;
+    --paper-tint: #241a13;
+    --ink: #f4ece3;
+    --ink-soft: #c3ab98;
+    --coral: #fb923c;
+    --coral-strong: #fdba74;
+    --coral-tint: #c2410c;
+    --coral-wash: #2e1c10;
+    --blue: #7fa8ff;
+    --blue-tint: #16233d;
+    --sand: #3a2c21;
+    --sand-strong: #4a392c;
+    --green: #4ade80;
+    --shadow: rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--paper); }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Karla", ui-sans-serif, system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { max-width: 100%; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  h1, h2, h3 {
+    font-family: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    text-wrap: balance;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  a { color: inherit; }
+
+  section { position: relative; }
+
+  /* ---------- top bar ---------- */
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+  }
+
+  .logo-mark {
+    width: 26px;
+    height: 26px;
+    flex: none;
+  }
+
+  .topnav {
+    display: flex;
+    gap: 28px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .topnav a { text-decoration: none; }
+  .topnav a:hover { color: var(--coral); }
+
+  .nav-cta {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .topnav { display: none; }
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    padding: 72px 0 88px;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero { padding: 44px 0 56px; }
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--coral-strong);
+    margin-bottom: 18px;
+  }
+
+  .kicker::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--coral);
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 5.4vw, 58px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--coral);
+  }
+
+  .hero-sub {
+    margin: 22px 0 0;
+    max-width: 46ch;
+    font-size: 18px;
+    color: var(--ink-soft);
+  }
+
+  .hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  .hero-trust svg { flex: none; }
+
+  /* ---------- radar / phone scene ---------- */
+
+  .scene {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    max-width: 440px;
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid var(--coral-tint);
+    opacity: 0.55;
+  }
+  .ring.r1 { width: 40%; height: 40%; }
+  .ring.r2 { width: 66%; height: 66%; }
+  .ring.r3 { width: 92%; height: 92%; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ring.pulse {
+      animation: pulse-out 2.6s cubic-bezier(.2,.7,.3,1) 0.4s 1 both;
+    }
+    @keyframes pulse-out {
+      0%   { transform: scale(0.55); opacity: 0; }
+      18%  { opacity: 0.7; }
+      100% { transform: scale(1); opacity: 0.55; }
+    }
+  }
+
+  .store-dot {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--sand-strong);
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+  .store-dot.d1 { top: 6%; left: 14%; }
+  .store-dot.d2 { bottom: 10%; left: 4%; }
+  .store-dot.d3 { top: 2%; right: 10%; }
+  .store-dot.d4 { bottom: 2%; right: 16%; }
+
+  .pin {
+    position: relative;
+    z-index: 2;
+    width: 74px;
+    height: 74px;
+    filter: drop-shadow(0 10px 18px var(--shadow));
+  }
+
+  .phone {
+    position: absolute;
+    z-index: 3;
+    right: -6%;
+    bottom: -6%;
+    width: 168px;
+    background: var(--ink);
+    border-radius: 24px;
+    padding: 8px;
+    box-shadow: 0 22px 40px var(--shadow);
+  }
+
+  .phone-screen {
+    background: var(--paper);
+    border-radius: 17px;
+    overflow: hidden;
+    padding-top: 14px;
+  }
+
+  .phone-notch {
+    width: 46px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--sand-strong);
+    margin: 0 auto 10px;
+  }
+
+  .phone-card {
+    margin: 0 10px 10px;
+    background: var(--paper-tint);
+    border: 1px solid var(--sand);
+    border-radius: 12px;
+    padding: 9px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .phone-card .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--coral); margin-top: 5px; flex: none;
+  }
+
+  .phone-card b { font-size: 10.5px; display: block; }
+  .phone-card span { font-size: 9px; color: var(--ink-soft); display: block; margin-top: 2px; line-height: 1.35; }
+
+  .phone-list-row {
+    margin: 0 10px 8px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 9.5px;
+    color: var(--ink-soft);
+  }
+  .phone-list-row .box {
+    width: 11px; height: 11px; border-radius: 5px;
+    border: 1.4px solid var(--sand-strong); flex: none;
+  }
+  .phone-list-row.done .box { background: transparent; border: none; color: var(--green); font-weight: 700; width: auto; }
+  .phone-list-row.done span { text-decoration: line-through; opacity: 0.6; }
+
+  /* ---------- sections shared ---------- */
+
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--coral-strong);
+    margin: 0 0 12px;
+  }
+
+  .section-head {
+    max-width: 56ch;
+    margin-bottom: 44px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(28px, 3.6vw, 38px);
+    letter-spacing: -0.015em;
+    line-height: 1.12;
+  }
+
+  .section-head p {
+    margin: 16px 0 0;
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+
+  /* ---------- how it works ---------- */
+
+  .steps {
+    padding: 84px 0;
+    background: var(--paper-tint);
+    border-top: 1px solid var(--sand);
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .step-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    counter-reset: step;
+  }
+
+  @media (max-width: 900px) {
+    .step-list { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+  }
+  @media (max-width: 560px) {
+    .step-list { grid-template-columns: 1fr; }
+  }
+
+  .step {
+    position: relative;
+    padding: 0 22px 0 0;
+    counter-increment: step;
+  }
+
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 21px;
+    right: 0;
+    width: 22px;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, var(--coral-tint) 0 6px, transparent 6px 10px);
+  }
+  @media (max-width: 900px) {
+    .step:not(:last-child)::after { display: none; }
+  }
+
+  .step-num {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--coral);
+    width: 42px;
+    height: 42px;
+    border: 1.5px solid var(--coral-tint);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+  }
+  .step-num::before { content: counter(step); }
+
+  .step h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 30ch;
+  }
+
+  /* ---------- features ---------- */
+
+  .features { padding: 88px 0; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--sand);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  @media (max-width: 860px) {
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+
+  .feature {
+    background: var(--paper);
+    padding: 30px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: var(--coral-wash);
+    display: grid;
+    place-items: center;
+  }
+  .feature-icon svg { width: 21px; height: 21px; }
+
+  .feature h3 { font-size: 16.5px; }
+  .feature p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+
+  /* ---------- privacy ---------- */
+
+  .privacy {
+    padding: 84px 0;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy { background: var(--paper-tint); }
+  }
+  :root[data-theme="dark"] .privacy { background: var(--paper-tint); }
+
+  .privacy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 800px) {
+    .privacy-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .privacy h2 {
+    color: var(--paper);
+    font-size: clamp(26px, 3.4vw, 34px);
+    letter-spacing: -0.015em;
+    line-height: 1.14;
+  }
+  :root[data-theme="dark"] .privacy h2 { color: var(--ink); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy h2 { color: var(--ink); }
+  }
+
+  .privacy p.lead {
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
+    font-size: 17px;
+    margin: 16px 0 0;
+  }
+  :root[data-theme="dark"] .privacy p.lead { color: var(--ink-soft); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy p.lead { color: var(--ink-soft); }
+  }
+
+  .privacy-list { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 16px; }
+  .privacy-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    color: color-mix(in srgb, var(--paper) 86%, transparent);
+    font-size: 15px;
+  }
+  :root[data-theme="dark"] .privacy-list li { color: var(--ink); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy-list li { color: var(--ink); }
+  }
+  .privacy-list svg { flex: none; margin-top: 2px; }
+
+  .privacy-panel {
+    background: color-mix(in srgb, var(--paper) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+  }
+  :root[data-theme="dark"] .privacy-panel {
+    background: var(--paper);
+    border-color: var(--sand);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy-panel {
+      background: var(--paper);
+      border-color: var(--sand);
+    }
+  }
+
+  .privacy-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 13px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+    color: var(--paper);
+  }
+  :root[data-theme="dark"] .privacy-row { color: var(--ink); border-color: var(--sand); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy-row { color: var(--ink); border-color: var(--sand); }
+  }
+  .privacy-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .privacy-row:first-child { padding-top: 0; }
+  .privacy-row .label { font-size: 14px; color: color-mix(in srgb, var(--paper) 68%, transparent); }
+  :root[data-theme="dark"] .privacy-row .label { color: var(--ink-soft); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .privacy-row .label { color: var(--ink-soft); }
+  }
+  .privacy-row .val { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 14px; color: var(--coral); }
+
+  /* ---------- pricing ---------- */
+
+  .pricing { padding: 92px 0; }
+
+  .price-card {
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--coral-wash);
+    border: 1px solid var(--coral-tint);
+    border-radius: var(--radius-lg);
+    padding: 52px 40px;
+  }
+
+  .price-days {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    background: var(--paper);
+    border: 1px solid var(--sand);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: 26px;
+  }
+  .price-days .mono { color: var(--coral-strong); font-size: 15px; }
+
+  .price-amount {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 800;
+    font-size: clamp(56px, 9vw, 84px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .price-amount sup { font-size: 0.34em; top: -0.6em; }
+  .price-amount .cents { font-size: 0.5em; }
+  .price-amount .then { font-family: "Karla", sans-serif; font-weight: 600; font-size: 0.24em; color: var(--ink-soft); display: block; margin-top: 10px; letter-spacing: 0; }
+
+  .price-note {
+    margin: 22px auto 0;
+    max-width: 40ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  .price-tags {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .price-tag {
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--paper);
+    border: 1px solid var(--sand);
+    color: var(--ink-soft);
+  }
+
+  /* ---------- download ---------- */
+
+  .download {
+    padding: 90px 0 100px;
+    text-align: center;
+  }
+
+  .download h2 {
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: -0.02em;
+  }
+
+  .download p {
+    color: var(--ink-soft);
+    max-width: 42ch;
+    margin: 16px auto 0;
+    font-size: 16.5px;
+  }
+
+  .store-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+  }
+
+  .store-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    padding: 13px 22px;
+    border-radius: 14px;
+    min-width: 200px;
+    text-align: left;
+  }
+  .store-btn svg { flex: none; }
+  .store-btn .kv { display: flex; flex-direction: column; }
+  .store-btn .kv .small { font-size: 10.5px; opacity: 0.75; }
+  .store-btn .kv .big { font-size: 16.5px; font-weight: 700; font-family: "Bricolage Grotesque", sans-serif; }
+
+  .store-btn.disabled {
+    background: transparent;
+    border: 1.5px dashed var(--sand-strong);
+    color: var(--ink-soft);
+    cursor: default;
+  }
+  .store-btn.disabled svg { opacity: 0.5; }
+
+  .download-note {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  footer {
+    border-top: 1px solid var(--sand);
+    padding: 26px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" fill="var(--coral)"/>
+        <path d="M16 6c-4.1 0-7.4 3.3-7.4 7.4 0 5.6 7.4 12.6 7.4 12.6s7.4-7 7.4-12.6C23.4 9.3 20.1 6 16 6z" fill="var(--paper)"/>
+        <circle cx="16" cy="13.4" r="3.1" fill="var(--coral)"/>
+      </svg>
+      ShopPing
+    </div>
+    <nav class="topnav">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <a class="nav-cta" href="#download">Get the app</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="kicker">A shopping list that knows where you are</p>
+      <h1>You were <em>already</em> there.</h1>
+      <p class="hero-sub">
+        And you still forgot the milk. ShopPing taps your phone the instant you're
+        near a store with something on your list — so "right there" finally means
+        "got it," instead of a text to yourself twenty minutes too late.
+      </p>
+      <div class="hero-trust">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 3.6v3.8c0 3.6 2.3 6.6 5.5 7.6 3.2-1 5.5-4 5.5-7.6V3.6L8 1.5z" stroke="var(--coral)" stroke-width="1.3"/></svg>
+        No account. No ads. Your list never leaves your phone.
+      </div>
+    </div>
+    <div class="scene">
+      <div class="ring r3 pulse"></div>
+      <div class="ring r2"></div>
+      <div class="ring r1"></div>
+      <div class="store-dot d1">🛒</div>
+      <div class="store-dot d2">🎯</div>
+      <div class="store-dot d3">💊</div>
+      <div class="store-dot d4">📦</div>
+      <svg class="pin" viewBox="0 0 74 74" fill="none">
+        <circle cx="37" cy="37" r="37" fill="var(--coral)"/>
+        <path d="M37 16c-8.3 0-15 6.7-15 15 0 11.3 15 25 15 25s15-13.7 15-25c0-8.3-6.7-15-15-15z" fill="var(--paper)"/>
+        <path d="M30 30.5h14l-1.6 9.2a1.8 1.8 0 0 1-1.8 1.5h-7.2a1.8 1.8 0 0 1-1.8-1.5L30 30.5z" stroke="var(--coral)" stroke-width="1.6" fill="none"/>
+        <path d="M31 30.5v-1.8a3.6 3.6 0 0 1 7.2 0v1.8" stroke="var(--coral)" stroke-width="1.6"/>
+      </svg>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-card">
+            <span class="dot"></span>
+            <div>
+              <b>You're near Walmart</b>
+              <span>3 items on your list. Want to stop by?</span>
+            </div>
+          </div>
+          <div class="phone-list-row"><span class="box"></span><span>Paper towels</span></div>
+          <div class="phone-list-row"><span class="box"></span><span>Olive oil</span></div>
+          <div class="phone-list-row done"><span>✓</span><span>Coffee filters</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="steps" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2>Four steps, then it just runs in the background.</h2>
+    </div>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num"></div>
+        <h3>Enter your ZIP</h3>
+        <p>ShopPing finds the real stores near you — 16 major U.S. chains, plus anywhere else you shop.</p>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <h3>Pick your stores</h3>
+        <p>Choose the ones you actually go to, then build a list for each — name, photo, even a link.</p>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <h3>Set your distance</h3>
+        <p>One default radius for everything, or fine-tune it store by store, down to a tenth of a mile.</p>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <h3>Walk within range</h3>
+        <p>Your phone alerts you right there — with exactly what's still on that store's list.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Under the hood</p>
+      <h2>The small settings that make it actually usable.</h2>
+      <p>Every list app has an add-item button. Here's what ShopPing adds once you've used it for a week.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--coral)" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="var(--coral)" stroke-width="1.6"/></svg></div>
+        <h3>Distance, per store</h3>
+        <p>Your grocery store might get a half-mile heads-up; the pharmacy you only remember at the door can ping you at 50 feet.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="var(--coral)" stroke-width="1.6"/><circle cx="12" cy="12" r="9" stroke="var(--coral)" stroke-width="1.6"/></svg></div>
+        <h3>"Any Walmart" mode</h3>
+        <p>Turn on any-location alerts for a chain and it fires near whichever branch you pass — not just the one you first picked.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 4 9v11h16V9l-8-6z" stroke="var(--coral)" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 21v-6h4" stroke="var(--coral)" stroke-width="1.6"/></svg></div>
+        <h3>Stores that aren't chains</h3>
+        <p>Drop a pin for the corner shop or the farmers' market stand — it gets its own list and alerts, just like the big names.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><text x="4" y="17" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="var(--coral)">Aa</text></svg></div>
+        <h3>Text size, your call</h3>
+        <p>Four steps up from the default, one tap back down — no hunting through your phone's system settings.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="1.4" fill="var(--coral)"/><circle cx="9" cy="12" r="1.4" fill="var(--coral)"/><circle cx="9" cy="17" r="1.4" fill="var(--coral)"/><circle cx="15" cy="7" r="1.4" fill="var(--coral)"/><circle cx="15" cy="12" r="1.4" fill="var(--coral)"/><circle cx="15" cy="17" r="1.4" fill="var(--coral)"/></svg></div>
+        <h3>Sort, or just drag</h3>
+        <p>A-Z, most items first, or drag stores and items into whatever order matches how you actually shop.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4 10-10" stroke="var(--coral)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Checked items step aside</h3>
+        <p>Tick something off and it slides down to its own "already bought" section instead of cluttering what's left.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="privacy">
+  <div class="wrap privacy-grid">
+    <div>
+      <p class="eyebrow">No accounts, no server</p>
+      <h2>Nothing about your list leaves your phone.</h2>
+      <p class="lead">
+        ShopPing was built without a backend on purpose. There's nothing to sign up for,
+        nothing to sync, and nothing sitting on a server somewhere that could leak.
+      </p>
+      <ul class="privacy-list">
+        <li>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9.5 7.5 13 14 5" stroke="var(--coral)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Your list is stored only on your device — not in an account, not in the cloud.
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9.5 7.5 13 14 5" stroke="var(--coral)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Alerts are calculated on your phone. No location ever gets sent anywhere to trigger one.
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9.5 7.5 13 14 5" stroke="var(--coral)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          No ad network, no analytics dashboard, nothing to sell.
+        </li>
+      </ul>
+    </div>
+    <div class="privacy-panel">
+      <div class="privacy-row"><span class="label">Account required</span><span class="val">NONE</span></div>
+      <div class="privacy-row"><span class="label">Where your list lives</span><span class="val mono">on-device</span></div>
+      <div class="privacy-row"><span class="label">Location sent to a server</span><span class="val mono">never</span></div>
+      <div class="privacy-row"><span class="label">Ads</span><span class="val mono">0</span></div>
+      <div class="privacy-row"><span class="label">Store search</span><span class="val mono">OpenStreetMap</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="section-head" style="margin-left:auto;margin-right:auto;text-align:center;">
+      <p class="eyebrow" style="text-align:center;">Pricing</p>
+      <h2>One price. Not a monthly one.</h2>
+    </div>
+    <div class="price-card">
+      <div class="price-days">Free for <span class="mono">14</span> days</div>
+      <div class="price-amount">
+        <sup>$</sup>2<span class="cents">.99</span><span class="then">then — once, forever</span>
+      </div>
+      <p class="price-note">
+        No subscription, no auto-renewal, nothing to remember to cancel. Pay once, keep every
+        feature for as long as you have the app.
+      </p>
+      <div class="price-tags">
+        <span class="price-tag">No subscription</span>
+        <span class="price-tag">No recurring charge</span>
+        <span class="price-tag">Buy once</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="download" id="download">
+  <div class="wrap">
+    <h2>Stop leaving the store without it.</h2>
+    <p>Free to try for two weeks — set up your first list in under a minute.</p>
+    <div class="store-buttons">
+      <a class="store-btn" href="https://apps.apple.com/app/id6802057059" target="_blank" rel="noopener">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--paper)"><path d="M16.365 1.43c0 1.14-.463 2.096-1.184 2.883-.796.83-2.083 1.474-3.13 1.474-.11-1.11.464-2.223 1.183-2.94.796-.83 2.148-1.443 3.131-1.417zM20.62 17.104c-.472 1.09-.694 1.577-1.297 2.548-.842 1.35-2.03 3.036-3.501 3.05-1.303.014-1.64-.85-3.41-.84-1.77.01-2.14.855-3.443.841-1.472-.014-2.596-1.53-3.438-2.878-2.36-3.78-2.607-8.22-1.15-10.582.958-1.535 2.518-2.432 3.987-2.432 1.494 0 2.435.85 3.673.85 1.203 0 1.933-.85 3.674-.85 1.32 0 2.717.72 3.717 1.964-3.27 1.79-2.74 6.463.188 8.329z"/></svg>
+        <span class="kv"><span class="small">Download on the</span><span class="big">App Store</span></span>
+      </a>
+      <span class="store-btn disabled" aria-disabled="true" title="Coming soon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--ink-soft)"><path d="M3.6 2.6c-.4.4-.6.9-.6 1.5v15.8c0 .6.2 1.1.6 1.5l.2.1L13 12.4v-.2L3.8 2.5l-.2.1zM16 15.3l-3-3v-.2l3-3 3.5 2c1 .6 1 1.6 0 2.2l-3.5 2zM4.4 21.5 13.7 13l2.3 2.3-10.8 6c-.3.2-.7.3-1 .2l.2 0zM13.7 11l-9.3-9.4c.3-.1.6 0 .9.2L16 8l-2.3 3z"/></svg>
+        <span class="kv"><span class="small">Coming soon to</span><span class="big">Google Play</span></span>
+      </span>
+    </div>
+    <p class="download-note">iOS · App Review in progress — the link above goes live the moment it clears. Android build in progress.</p>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>ShopPing — a shopping list that pays attention to where you are.</span>
+  <span>Made for iOS &amp; Android</span>
+</footer>
+
+</body>
+</html>

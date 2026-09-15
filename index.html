@@ -724,8 +724,11 @@
     font-size: 13px;
     color: var(--ink-soft);
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 10px 24px;
   }
+
+  .footer-legal a { color: inherit; text-decoration: none; }
+  .footer-legal a:hover { color: var(--coral); }
 </style>
 </head>
 <body>
@@ -954,6 +957,11 @@
 
 <footer class="wrap">
   <span>ShopPing — a shopping list that pays attention to where you are.</span>
+  <span class="footer-legal">
+    <a href="https://claude.ai/code/artifact/5cf25bfc-5683-4641-92f0-3ab0ab538672#privacy">Privacy Policy</a>
+    ·
+    <a href="https://claude.ai/code/artifact/5cf25bfc-5683-4641-92f0-3ab0ab538672#terms">Terms of Use</a>
+  </span>
   <span>Made for iOS &amp; Android</span>
 </footer>
 

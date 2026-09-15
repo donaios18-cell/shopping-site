@@ -473,6 +473,19 @@
     gap: 14px;
   }
 
+  /* Odd card count (7) — let the trailing card span the row instead of
+     leaving an empty cell next to it, at any column count, and lay it out
+     as a wide banner (icon beside the text) instead of stretching the same
+     narrow stacked layout across the full width. */
+  .feature:last-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+  .feature:last-child .feature-icon { flex-shrink: 0; }
+  .feature:last-child .feature-text { display: flex; flex-direction: column; gap: 6px; max-width: 520px; }
+
   .feature-icon {
     width: 40px;
     height: 40px;
@@ -852,6 +865,13 @@
         <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4 10-10" stroke="var(--coral)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Checked items step aside</h3>
         <p>Tick something off and it slides down to its own "already bought" section instead of cluttering what's left.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 8h3l2-2h6l2 2h3v11H4V8z" stroke="var(--coral)" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="var(--coral)" stroke-width="1.6"/></svg></div>
+        <div class="feature-text">
+          <h3>Photo or link, per item</h3>
+          <p>Snap a picture of the exact one you want, or paste a product link — handy for anything that's easy to mix up in the aisle.</p>
+        </div>
       </div>
     </div>
   </div>

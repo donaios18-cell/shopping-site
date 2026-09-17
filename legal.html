@@ -377,9 +377,9 @@
       <p>Two map lookups need the network, and they are the only ways a location leaves your device:</p>
       <ul>
         <li><strong>Finding stores.</strong> To find real store locations near you, the App sends the coordinates you provide (your current location or a map pin), together with the store name you're searching for, to Apple's Maps service.</li>
-        <li><strong>Naming a pin.</strong> When you place a pin for a store of your own, the pin's coordinates are sent to OpenStreetMap's Nominatim service to look up its street address.</li>
+        <li><strong>Naming a pin.</strong> When you place a pin for a store of your own, the pin's coordinates are sent to the same Apple service to look up its street address.</li>
       </ul>
-      <p>Both go directly to those services, not to us. We don't receive them, keep them, or use them for advertising or analytics; Apple's and OpenStreetMap's own privacy policies cover how they handle such requests.</p>
+      <p>Both go directly to Apple, not to us. We don't receive them, keep them, or use them for advertising or analytics; Apple's own privacy policy covers how it handles such requests.</p>
       <p>To be allowed to query Apple's Maps service, the App first fetches a short-lived access token from a small service we run for that one purpose. That request carries no location, no list data, and nothing that identifies you. Like any web request it unavoidably reveals an IP address to the host; we don't record it.</p>
       <p>You can revoke location permission at any time in your device's Settings. The nearby-store notification feature will stop working, but the rest of the App will continue to work normally.</p>
     </section>

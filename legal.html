@@ -297,7 +297,7 @@
     </svg>
     ShopPing
   </a>
-  <span class="topbar-date">Effective August 15, 2026</span>
+  <span class="topbar-date">Effective September 17, 2026</span>
 </div>
 
 <div class="wrap" id="top">
@@ -319,7 +319,7 @@
     <div class="toc-group">
       <p class="toc-group-title">Terms of Use</p>
       <a href="#tu-1">1. Acceptance</a>
-      <a href="#tu-2">2. License</a>
+      <a href="#tu-2">2. License, trial &amp; purchase</a>
       <a href="#tu-3">3. What the app guarantees</a>
       <a href="#tu-4">4. Disclaimer of warranties</a>
       <a href="#tu-5">5. Limitation of liability</a>
@@ -340,11 +340,11 @@
     <header class="doc-header">
       <p class="eyebrow">Legal</p>
       <h1 class="doc-title">Privacy Policy &amp; Terms of Use</h1>
-      <p class="doc-meta">ShopPing — a shopping-list app that reminds you when you're near a store. Effective August 15, 2026.</p>
+      <p class="doc-meta">ShopPing — a shopping-list app that reminds you when you're near a store. Effective September 17, 2026.</p>
     </header>
 
     <div class="callout">
-      <strong>Builder's note, not legal advice.</strong> This document was drafted from standard templates for a small independent app — it has not been reviewed by an attorney. Before relying on it, consider a professional review — especially if the app starts collecting more data or making money.
+      <strong>Builder's note, not legal advice.</strong> This document was drafted from standard templates for a small independent app — it has not been reviewed by an attorney. Before relying on it, consider a professional review.
     </div>
 
     <div class="part-divider" id="privacy">
@@ -354,25 +354,33 @@
 
     <section class="doc-section">
       <p>ShopPing ("the App," "we," "us") is developed by Natalia Gurevich. This Privacy Policy explains what information the App interacts with and how it's used. We've written it in plain language wherever possible.</p>
-      <div class="legal-strong"><strong>The short version:</strong> ShopPing has no user accounts, no server, and sends no data anywhere. Everything you enter stays on your device.</div>
+      <div class="legal-strong"><strong>The short version:</strong> ShopPing has no user accounts, and we run no server that stores anything about you. Your lists stay on your device. A few features do need the network — finding stores on the map, buying the App, and sending a list to someone — and each is described below.</div>
     </section>
 
     <section class="doc-section" id="pp-1">
       <h2 class="sec-title"><span class="num">1</span> Information we collect</h2>
-      <p>The App works entirely offline, without any account or sign-up. The following is created and stored <em>only</em> on your device, in the App's local storage:</p>
+      <p>The App works without any account or sign-up. The following is created and stored <em>only</em> on your device, in the App's local storage:</p>
       <ul>
         <li>The store chains you select.</li>
         <li>Your shopping list items — names, checked/unchecked status, notes, and any photos or product links you add.</li>
-        <li>Store locations, if you use the App's testing feature to assign a location to a store.</li>
+        <li>Store locations you choose — a specific branch of a chain, the nearby branches used for "any location" alerts, or a pin you place on the map for a store of your own.</li>
         <li>Your chosen alert-distance settings, both the overall default and any per-store overrides.</li>
+        <li>The language you pick for the App, if you choose one other than your device's.</li>
       </ul>
+      <p>The App also reads your device's language and region settings, to decide which language to show and which country's shops to suggest. That happens on your device and is not sent anywhere.</p>
       <p>We do not collect your name, email address, phone number, or any other account information — the App has no accounts to collect them for.</p>
     </section>
 
     <section class="doc-section" id="pp-2">
       <h2 class="sec-title"><span class="num">2</span> Location data</h2>
       <p>With your permission, the App uses your device's location to calculate the distance between you and stores you've saved, so it can show a local notification when you're nearby. This calculation happens entirely on your device. Your location is never sent to us or stored on any server we control.</p>
-      <p>To find real store locations near you, the App sends the coordinates you provide (your current location or a dropped map pin) to Apple's Maps service — this is required for the search to work, and is the only way your location leaves your device. It is not sent to us, not stored beyond that single search, and not used for advertising or analytics.</p>
+      <p>Two map lookups need the network, and they are the only ways a location leaves your device:</p>
+      <ul>
+        <li><strong>Finding stores.</strong> To find real store locations near you, the App sends the coordinates you provide (your current location or a map pin), together with the store name you're searching for, to Apple's Maps service.</li>
+        <li><strong>Naming a pin.</strong> When you place a pin for a store of your own, the pin's coordinates are sent to OpenStreetMap's Nominatim service to look up its street address.</li>
+      </ul>
+      <p>Both go directly to those services, not to us. We don't receive them, keep them, or use them for advertising or analytics; Apple's and OpenStreetMap's own privacy policies cover how they handle such requests.</p>
+      <p>To be allowed to query Apple's Maps service, the App first fetches a short-lived access token from a small service we run for that one purpose. That request carries no location, no list data, and nothing that identifies you. Like any web request it unavoidably reveals an IP address to the host; we don't record it.</p>
       <p>You can revoke location permission at any time in your device's Settings. The nearby-store notification feature will stop working, but the rest of the App will continue to work normally.</p>
     </section>
 
@@ -383,13 +391,15 @@
 
     <section class="doc-section" id="pp-4">
       <h2 class="sec-title"><span class="num">4</span> Data storage &amp; security</h2>
-      <p>All App data lives locally on your device using standard iOS/Android app storage. It isn't protected by a separate password, so anyone with access to your unlocked device could view it — we recommend relying on your device's own screen lock.</p>
-      <p>Because there is no server, there is no copy of your data anywhere else, which also means we cannot recover it if you lose your device, uninstall the App, or clear its storage.</p>
+      <p>All App data lives locally on your device using standard app storage. It isn't protected by a separate password, so anyone with access to your unlocked device could view it — we recommend relying on your device's own screen lock.</p>
+      <p>Because we keep no copy of your data on any server, there is no copy of it anywhere else, which also means we cannot recover it if you lose your device, uninstall the App, or clear its storage.</p>
     </section>
 
     <section class="doc-section" id="pp-5">
       <h2 class="sec-title"><span class="num">5</span> Data sharing</h2>
-      <p>We do not sell, rent, share, or transmit your data to any third party, advertiser, or analytics provider — the App sends no data anywhere. It currently includes no third-party SDKs, analytics, or advertising services.</p>
+      <p>We do not sell, rent, or share your data with any advertiser or analytics provider, and the App contains no advertising or analytics services. Apart from the map lookups in section 2, the App uses the network in only two situations:</p>
+      <p><strong>Purchases.</strong> The free trial and the one-time unlock are handled by Apple through the App Store. We never see your payment details, and we don't receive your name or Apple Account. The App only learns from Apple whether the unlock has been purchased.</p>
+      <p><strong>Sending a list to someone.</strong> If you choose to send a list, the App turns the items still to buy on that list — item names, any product links you added, and the store's name, but never photos — into a link and hands it to your device's share sheet. You decide who receives it and which app carries it. The list travels inside the link itself, in the part after the "#", which browsers do not transmit to web servers: the page on shopping.nghive.app that opens the link displays the list using only the recipient's browser, so we never receive it. Anyone who has the link can read that list, and whichever messaging service you use handles it under its own privacy policy. Nothing is sent unless you choose to send it.</p>
       <p>If you tap a product link you've added to an item, you'll leave the App and open that page in your browser; that site's own privacy practices apply, not ours.</p>
     </section>
 
@@ -438,8 +448,10 @@
     </section>
 
     <section class="doc-section" id="tu-2">
-      <h2 class="sec-title"><span class="num">2</span> License to use the app</h2>
+      <h2 class="sec-title"><span class="num">2</span> License, free trial &amp; purchase</h2>
       <p>We grant you a limited, non-exclusive, non-transferable, revocable license to install and use the App on devices you own or control, for your own personal, non-commercial use, subject to these Terms.</p>
+      <p>The App is free to download and fully usable for a 14-day trial. After the trial, continuing to use it requires a single one-time purchase made through Apple's App Store. It is not a subscription: there are no recurring charges, and the purchase unlocks the App for your Apple Account, including on your other devices, where it can be restored at no extra cost. The price is shown in the App before you buy and may differ by country and currency.</p>
+      <p>Payments, refunds, and billing questions are handled by Apple under its own terms — we never process payments ourselves and cannot issue refunds directly.</p>
     </section>
 
     <section class="doc-section" id="tu-3">
@@ -448,6 +460,7 @@
       <ul>
         <li>Store names and categories are a general reference list and may not reflect real-time hours, inventory, prices, or exact locations.</li>
         <li>Location-based notifications depend on your device's GPS accuracy, battery and power settings, OS permissions, and connectivity, and may be delayed, inaccurate, or may not arrive at all.</li>
+        <li>A list you send to someone is delivered by whichever messaging service you choose. We can't guarantee it arrives, and can't keep it private once it has left your device.</li>
         <li>Do not rely on the App for time-critical, safety-critical, medical, or financial decisions.</li>
       </ul>
     </section>
@@ -459,7 +472,7 @@
 
     <section class="doc-section" id="tu-5">
       <h2 class="sec-title"><span class="num">5</span> Limitation of liability</h2>
-      <div class="legal-strong">TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE AND OUR DEVELOPERS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, DATA, OR GOODWILL, OR FOR ANY FINANCIAL LOSS, PROPERTY DAMAGE, PERSONAL INJURY, OR HEALTH-RELATED HARM, ARISING FROM OR RELATED TO YOUR USE OF, OR INABILITY TO USE, THE APP — EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. WHERE SUCH LIABILITY CANNOT BE FULLY DISCLAIMED, OUR TOTAL LIABILITY TO YOU FOR ALL CLAIMS WILL NOT EXCEED THE AMOUNT YOU PAID FOR THE APP — WHICH, FOR A FREE APP, IS ZERO.</div>
+      <div class="legal-strong">TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE AND OUR DEVELOPERS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, DATA, OR GOODWILL, OR FOR ANY FINANCIAL LOSS, PROPERTY DAMAGE, PERSONAL INJURY, OR HEALTH-RELATED HARM, ARISING FROM OR RELATED TO YOUR USE OF, OR INABILITY TO USE, THE APP — EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. WHERE SUCH LIABILITY CANNOT BE FULLY DISCLAIMED, OUR TOTAL LIABILITY TO YOU FOR ALL CLAIMS WILL NOT EXCEED THE AMOUNT YOU PAID FOR THE APP.</div>
       <p>Some jurisdictions don't allow the exclusion or limitation of certain damages, so some of the above may not apply to you.</p>
     </section>
 
@@ -475,7 +488,7 @@
 
     <section class="doc-section" id="tu-8">
       <h2 class="sec-title"><span class="num">8</span> Your content</h2>
-      <p>Any content you create in the App — item names, notes, photos — remains yours. Since it's stored only on your device and never transmitted to us, we claim no rights to it.</p>
+      <p>Any content you create in the App — item names, notes, photos — remains yours. Since it's stored only on your device and never transmitted to us, we claim no rights to it. If you send a list to someone, what you send and whom you send it to are your responsibility.</p>
     </section>
 
     <section class="doc-section" id="tu-9">
@@ -520,7 +533,7 @@
       <p>Questions about these Terms? Reach us at dona.ios18@gmail.com.</p>
     </section>
 
-    <p class="end-mark">ShopPing — Privacy Policy &amp; Terms of Use · Effective August 15, 2026</p>
+    <p class="end-mark">ShopPing — Privacy Policy &amp; Terms of Use · Effective September 17, 2026</p>
   </main>
 </div>
 

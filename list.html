@@ -129,10 +129,35 @@
 
     openLink.href = legacy ? 'shopping://list?d=' + legacy[1] : 'shopping://list#' + hash;
 
+    // A leading "~" means the payload was compressed, which is what keeps a
+    // list of fifteen product links from producing a link nobody wants to
+    // look at. The button above works regardless — only this preview needs
+    // to undo it, so an old browser without DecompressionStream simply shows
+    // no preview rather than an error.
+    function bytesOf(b64) {
+      var bin = atob(b64.replace(/-/g, '+').replace(/_/g, '/'));
+      var out = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+      return out;
+    }
+
+    function textOf(payload) {
+      if (payload.charAt(0) !== '~') {
+        return Promise.resolve(new TextDecoder().decode(bytesOf(payload)));
+      }
+      if (typeof DecompressionStream !== 'function') return Promise.resolve(null);
+      var stream = new Blob([bytesOf(payload.slice(1))]).stream()
+        .pipeThrough(new DecompressionStream('deflate-raw'));
+      return new Response(stream).text().catch(function () { return null; });
+    }
+
     // Preview the contents so the page is useful even without the app
     // installed. Anything malformed just shows no preview — the app does its
     // own validation, this is only a courtesy.
-    try {
+    (legacy
+      ? Promise.resolve(null)
+      : textOf(hash)
+    ).then(function (decoded) {
       var storeName = null;
       var names = [];
 
@@ -143,10 +168,8 @@
           if (item && typeof item.name === 'string') names.push(item.name);
         });
       } else {
-        var bin = atob(hash.replace(/-/g, '+').replace(/_/g, '/'));
-        var bytes = new Uint8Array(bin.length);
-        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        var lines = new TextDecoder().decode(bytes).split('\n');
+        if (!decoded) return;
+        var lines = decoded.split('\n');
         var head = lines.shift() || '';
         // A chain sends "c<id>" plus its display name; anything else sends
         // "n<name>". Either way the name is what goes in the heading.
@@ -165,9 +188,9 @@
         li.textContent = name;
         list.appendChild(li);
       });
-    } catch (e) {
+    }).catch(function () {
       /* no preview, the button still works */
-    }
+    });
   })();
 </script>
 </body>

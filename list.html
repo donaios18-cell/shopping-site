@@ -88,8 +88,11 @@
 <meta property="og:url" content="https://shopping.nghive.app/list">
 <meta property="og:title" content="Shopping list · ShopPing">
 <meta property="og:description" content="Open a shopping list someone shared with you in ShopPing.">
-<meta property="og:image" content="https://nghive.app/assets/header.jpg">
-<meta property="og:site_name" content="NG Hive">
+<meta property="og:image" content="https://shopping.nghive.app/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://shopping.nghive.app/share-card.png">
+<meta property="og:site_name" content="ShopPing">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -111,35 +114,57 @@
   // server — so what someone shared stays between their phone and yours, and
   // never reaches this site's host. This page only re-hands it to the app.
   (function () {
-    var payload = (location.hash.match(/[#&]d=([^&]+)/) || [])[1];
+    var hash = location.hash.slice(1);
+    // Links made before September 2026 carry percent-encoded JSON after
+    // "d="; newer ones are base64url and take up about a third of the room.
+    var legacy = /^d=(.+)$/.exec(hash);
     var openLink = document.getElementById('open');
 
-    if (!payload) {
+    if (!hash) {
       document.getElementById('store').textContent =
         'This link is missing its list. Ask for it to be sent again.';
       openLink.style.display = 'none';
       return;
     }
 
-    openLink.href = 'shopping://list?d=' + payload;
+    openLink.href = legacy ? 'shopping://list?d=' + legacy[1] : 'shopping://list#' + hash;
 
     // Preview the contents so the page is useful even without the app
     // installed. Anything malformed just shows no preview — the app does its
     // own validation, this is only a courtesy.
     try {
-      var data = JSON.parse(decodeURIComponent(payload));
-      if (data && typeof data.storeName === 'string') {
-        document.getElementById('store').textContent = data.storeName;
-      }
-      if (data && Array.isArray(data.items)) {
-        var list = document.getElementById('items');
-        data.items.slice(0, 200).forEach(function (item) {
-          if (!item || typeof item.name !== 'string') return;
-          var li = document.createElement('li');
-          li.textContent = item.name;
-          list.appendChild(li);
+      var storeName = null;
+      var names = [];
+
+      if (legacy) {
+        var data = JSON.parse(decodeURIComponent(legacy[1]));
+        storeName = data && data.storeName;
+        (data && data.items ? data.items : []).forEach(function (item) {
+          if (item && typeof item.name === 'string') names.push(item.name);
+        });
+      } else {
+        var bin = atob(hash.replace(/-/g, '+').replace(/_/g, '/'));
+        var bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        var lines = new TextDecoder().decode(bytes).split('\n');
+        var head = lines.shift() || '';
+        // A chain sends "c<id>" plus its display name; anything else sends
+        // "n<name>". Either way the name is what goes in the heading.
+        var headParts = head.split('\t');
+        storeName = head.charAt(0) === 'c' ? headParts[1] || null : headParts[0].slice(1);
+        lines.forEach(function (line) {
+          var name = line.split('\t')[0];
+          if (name) names.push(name);
         });
       }
+
+      if (storeName) document.getElementById('store').textContent = storeName;
+      var list = document.getElementById('items');
+      names.slice(0, 200).forEach(function (name) {
+        var li = document.createElement('li');
+        li.textContent = name;
+        list.appendChild(li);
+      });
     } catch (e) {
       /* no preview, the button still works */
     }

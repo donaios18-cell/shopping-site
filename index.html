@@ -444,6 +444,31 @@
     max-width: 30ch;
   }
 
+  /* The practical small print under the steps — the questions testers
+     actually asked, answered before anyone has to ask them. */
+  .good-to-know {
+    margin-top: 56px;
+    padding: 26px 28px;
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-md);
+    background: var(--paper);
+  }
+  .good-to-know h3 {
+    font-size: 16px;
+    margin: 0 0 12px;
+  }
+  .good-to-know ul {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 8px;
+  }
+  .good-to-know li {
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .good-to-know b { color: var(--ink); font-weight: 600; }
+
   /* ---------- features ---------- */
 
   .features { padding: 88px 0; }
@@ -827,6 +852,15 @@
         <h3>Walk within range</h3>
         <p>Your phone alerts you right there — with exactly what's still on that store's list.</p>
       </div>
+    </div>
+
+    <div class="good-to-know">
+      <h3>Good to know</h3>
+      <ul>
+        <li><b>Nearby search shows the closest few, not every branch.</b> "Find nearby stores" lists up to the 5 closest within 50 miles (80 km), and "Any location" alerts cover up to the 8 closest. In a city with seventy Walgreens you'll see the nearest handful.</li>
+        <li><b>Store further away, or a chain that isn't listed?</b> Add it with "+ My own store" and put the pin on the map yourself — it gets its own list and alerts, like any other store.</li>
+        <li><b>Searching by name looks around the pin.</b> When adding your own store, move the pin to the right area first, then search — otherwise it looks near wherever the pin already is.</li>
+      </ul>
     </div>
   </div>
 </section>

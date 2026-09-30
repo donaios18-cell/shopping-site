@@ -95,6 +95,7 @@
 <meta property="og:site_name" content="ShopPing">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="cyrillic.css">
 </head>
 <body>
 <div class="card">
@@ -102,12 +103,48 @@
   <p class="store" id="store"></p>
   <ul id="items"></ul>
   <a class="btn" id="open" href="#">Open in ShopPing</a>
-  <p class="hint">
+  <p class="hint" id="hint">
     Nothing happens? You may not have the app yet —
     <a href="https://shopping.nghive.app/">get ShopPing here</a>,
     then tap the link again.
   </p>
 </div>
+
+<script>
+  // One address for every language: the app builds the link, so the page
+  // follows the reader's browser instead of a /xx/ folder.
+  (function () {
+    var T = {
+      es: ['Lista de compras', 'Abrir en ShopPing', '¿No pasa nada? Puede que aún no tengas la app: ', 'consigue ShopPing aquí', ' y vuelve a tocar el enlace.', 'A este enlace le falta la lista. Pide que te lo envíen de nuevo.'],
+      de: ['Einkaufsliste', 'In ShopPing öffnen', 'Nichts passiert? Vielleicht hast du die App noch nicht – ', 'hier gibt es ShopPing', ', dann tippe noch einmal auf den Link.', 'In diesem Link fehlt die Liste. Bitte lass ihn dir noch einmal schicken.'],
+      fr: ['Liste de courses', 'Ouvrir dans ShopPing', 'Rien ne se passe ? Vous n’avez peut-être pas encore l’app : ', 'téléchargez ShopPing ici', ', puis touchez à nouveau le lien.', 'Ce lien ne contient pas la liste. Demandez qu’on vous le renvoie.'],
+      ru: ['Список покупок', 'Открыть в ShopPing', 'Ничего не происходит? Возможно, у вас ещё нет приложения — ', 'скачайте ShopPing здесь', ' и нажмите на ссылку ещё раз.', 'В этой ссылке нет списка. Попросите прислать её ещё раз.'],
+      pt: ['Lista de compras', 'Abrir no ShopPing', 'Nada acontece? Talvez você ainda não tenha o app — ', 'baixe o ShopPing aqui', ' e toque no link de novo.', 'Este link está sem a lista. Peça para enviarem de novo.']
+    };
+    var prefs = navigator.languages || [navigator.language || 'en'];
+    var lang = null;
+    for (var i = 0; i < prefs.length && !lang; i++) {
+      var code = String(prefs[i]).slice(0, 2).toLowerCase();
+      if (code === 'en') break;
+      if (T[code]) lang = code;
+    }
+    window.LIST_MISSING = 'This link is missing its list. Ask for it to be sent again.';
+    if (!lang) return;
+    var t = T[lang];
+    document.documentElement.lang = lang;
+    document.title = t[0] + ' · ShopPing';
+    document.getElementById('title').textContent = t[0];
+    document.getElementById('open').textContent = t[1];
+    var hint = document.getElementById('hint');
+    var link = hint.querySelector('a');
+    link.href = 'https://shopping.nghive.app/' + lang + '/';
+    link.textContent = t[3];
+    hint.textContent = t[2];
+    hint.appendChild(link);
+    hint.appendChild(document.createTextNode(t[4]));
+    window.LIST_MISSING = t[5];
+  })();
+</script>
 
 <script>
   // The list travels in the URL fragment, which browsers never send to the
@@ -121,8 +158,7 @@
     var openLink = document.getElementById('open');
 
     if (!hash) {
-      document.getElementById('store').textContent =
-        'This link is missing its list. Ask for it to be sent again.';
+      document.getElementById('store').textContent = window.LIST_MISSING;
       openLink.style.display = 'none';
       return;
     }
